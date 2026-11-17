@@ -27,6 +27,8 @@ LIST_URL = 'https://www.ntis.go.kr/rndgate/eg/un/ra/mng.do'
 MAX_ITEMS = 5000
 # 이 공고일(YYYY-MM-DD) 이후 공고와, 그 이전 공고 중 아직 마감되지 않은 것만 보관합니다. 기준을 없애려면 ''로 바꾸세요.
 MIN_POSTED_DATE = '2026-10-01'
+# 마감일이 이 일수보다 더 지난 공고는 공고일과 관계없이 삭제합니다.
+CLOSED_KEEP_DAYS = 30
 KST = timezone(timedelta(hours=9))
 
 DEFAULT_CATEGORIES = {
@@ -100,11 +102,16 @@ def parse_feed(raw):
     return items
 
 
-def merge(existing, incoming, today, min_posted=MIN_POSTED_DATE):
+def merge(existing, incoming, today, min_posted=MIN_POSTED_DATE, closed_keep_days=CLOSED_KEEP_DAYS):
     """같은 공고(링크)는 한 번만 저장하고 최신 내용으로 갱신합니다. 공고일 최신순, 최대 MAX_ITEMS건.
+    마감일이 closed_keep_days일보다 더 지난 공고는 삭제합니다(마감일이 오늘-30일보다 이르면 삭제).
     공고일이 min_posted보다 이른 공고는 아직 마감되지 않은 것(마감일이 오늘 이후)만 남깁니다.
     이전 공고는 마감되면 다음 수집 때 빠집니다. 공고일을 모르는 공고는 남깁니다."""
+    closed_cutoff = (date.fromisoformat(today) - timedelta(days=closed_keep_days)).isoformat() if closed_keep_days is not None else ''
+
     def keep(item):
+        if closed_cutoff and item.get('close_date') and item['close_date'] < closed_cutoff:
+            return False
         if not min_posted or not item.get('posted_date') or item['posted_date'] >= min_posted:
             return True
         return bool(item.get('close_date')) and item['close_date'] >= today

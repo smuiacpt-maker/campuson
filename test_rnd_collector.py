@@ -86,10 +86,19 @@ class MergeTest(unittest.TestCase):
         self.assertEqual(data['status'], 'ok')
         self.assertEqual(data['source']['url'], 'https://www.ntis.go.kr/rndgate/eg/un/ra/mng.do')
 
+    def test_drops_announcements_closed_more_than_30_days_ago(self):
+        row = lambda i, posted, close: dict(id=i, title=i, url='https://www.ntis.go.kr/', posted_date=posted, close_date=close)
+        items, _ = rc.merge([], [row('30일 전 마감', '2026-10-01', '2026-10-18'),   # 오늘(11-17)-30일 = 10-18 → 남김
+                                 row('31일 전 마감', '2026-10-01', '2026-10-17'),   # 삭제(10월 이후 공고라도)
+                                 row('마감일 없음', '2026-10-02', ''),
+                                 row('접수중', '2026-11-01', '2026-11-30')], '2026-11-17')
+        self.assertEqual(sorted(item['id'] for item in items), ['30일 전 마감', '마감일 없음', '접수중'])
+        self.assertEqual(rc.CLOSED_KEEP_DAYS, 30)
+
     def test_keeps_at_most_max_items(self):
         rows = [dict(id=f'ntis-{n}', title=str(n), url='https://www.ntis.go.kr/', posted_date=f'2026-01-{n % 28 + 1:02d}')
                 for n in range(rc.MAX_ITEMS + 10)]
-        items, _ = rc.merge(rows, [], '2026-11-17', min_posted='')
+        items, _ = rc.merge(rows, [], '2026-11-17', min_posted='', closed_keep_days=None)
         self.assertEqual(len(items), rc.MAX_ITEMS)
 
     def test_drops_announcements_posted_before_cutoff(self):

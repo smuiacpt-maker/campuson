@@ -5,7 +5,7 @@
   "feed": "https://www.ntis.go.kr/rndgate/unRndRss.xml?prt=100"
  },
  "status": "ok",
- "updated_at": "2026-11-17T05:38:26+00:00",
+ "updated_at": "2026-11-17T05:50:55+00:00",
  "categories": {
   "status": [
    "접수예정",
@@ -870,19 +870,6 @@
    "status": "접수중"
   },
   {
-   "id": "ntis-1277082",
-   "title": "양자정보과학 인적기반조성사업 리더급연구역량강화(연구혁신형) 2026년도 한-캐나다 양자과학기술 공동연구사업 신규과제 공모",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1277082",
-   "ministry": "과학기술정보통신부",
-   "agency": "한국연구재단",
-   "posted_date": "2026-10-07",
-   "open_date": "2026-08-31",
-   "close_date": "2026-10-07",
-   "budget_won": 900000000,
-   "first_seen": "2026-11-17",
-   "status": "마감"
-  },
-  {
    "id": "ntis-1280241",
    "title": "2026년도 지역맞춤형 재난안전 문제해결 기술개발 지원(2단계) 신규과제 재공모",
    "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1280241",
@@ -948,19 +935,6 @@
    "status": "마감"
   },
   {
-   "id": "ntis-1279525",
-   "title": "[ 미래전략산업 대응 뿌리기술개발사업 ] 기획을 위한 기술수요조사",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1279525",
-   "ministry": "산업통상부",
-   "agency": "한국산업기술기획평가원",
-   "posted_date": "2026-10-02",
-   "open_date": "2026-10-02",
-   "close_date": "2026-10-15",
-   "budget_won": 0,
-   "first_seen": "2026-11-17",
-   "status": "마감"
-  },
-  {
    "id": "ntis-1279523",
    "title": "2026년도 한의약혁신기술개발사업 사업단장 공모안내",
    "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1279523",
@@ -996,19 +970,6 @@
    "open_date": "2026-10-01",
    "close_date": "2026-10-31",
    "budget_won": 0,
-   "first_seen": "2026-11-17",
-   "status": "마감"
-  },
-  {
-   "id": "ntis-1279317",
-   "title": "2026년도 제4차 과학기술분야 연구기획과제 공모",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1279317",
-   "ministry": "과학기술정보통신부",
-   "agency": "한국연구재단",
-   "posted_date": "2026-10-01",
-   "open_date": "2026-10-01",
-   "close_date": "2026-10-14",
-   "budget_won": 570000000,
    "first_seen": "2026-11-17",
    "status": "마감"
   },
