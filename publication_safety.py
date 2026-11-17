@@ -1,8 +1,12 @@
 """공개 뉴스 교체 전 보존 검사. 분류 규칙과 별개인 자동 갱신 경계입니다."""
 import json
+from datetime import datetime, timedelta, timezone
 from rss_summaries import assess_summary, USEFUL_KINDS
 
 CORE_FIELDS = ('id', 'title', 'url', 'original_url', 'date', 'body')
+# 원본(raw) 기록 보관 기간. 공개 목록(최신 5,000건, 약 5일치)과 중복 판별(72시간)보다 넉넉하게 둡니다.
+# 기간이 지난 비공개 기록은 지워 _internal/news-preservation.json이 GitHub 파일 한도(100MB)를 넘지 않게 합니다.
+RAW_RETENTION_DAYS = 14
 
 
 class PublicationBlocked(RuntimeError):
@@ -146,14 +150,46 @@ def validate_rows(rows, label):
     return errors
 
 
-def publication_errors(previous_news, previous_raw, news, raw, new_ids=(), excluded_ids=()):
+def raw_expired(row, cutoff):
+    """기사 게시 시각이 cutoff보다 이르면 True. 날짜를 해석할 수 없으면 보관(False)합니다."""
+    try:
+        published = datetime.fromisoformat(str(row.get('date') or '').replace('Z', '+00:00'))
+    except ValueError:
+        return False
+    if published.tzinfo is None:
+        published = published.replace(tzinfo=timezone.utc)
+    return published < cutoff
+
+
+def retention_cutoff(now=None):
+    return (now or datetime.now(timezone.utc)) - timedelta(days=RAW_RETENTION_DAYS)
+
+
+def prune_raw(raw, keep_ids, now=None):
+    """보관 기간이 지났고 공개·제외 판정·중복 링크에 쓰이지 않는 raw 기록을 뺍니다. (남길 목록, 뺀 ID) 반환."""
+    cutoff = retention_cutoff(now)
+    kept, pruned = [], set()
+    for row in raw:
+        if row['id'] not in keep_ids and raw_expired(row, cutoff):
+            pruned.add(row['id'])
+        else:
+            kept.append(row)
+    return kept, pruned
+
+
+def publication_errors(previous_news, previous_raw, news, raw, new_ids=(), excluded_ids=(), pruned_ids=(), now=None):
     errors = validate_rows(news, 'public') + validate_rows(raw, 'raw')
     if errors: return errors
     old = {r['id']: r for r in previous_news}; new = {r['id']: r for r in news}
     old_raw = {r['id']: r for r in previous_raw}; new_raw = {r['id']: r for r in raw}
     def add(reason, ids):
         if ids: errors.append(dict(reason=reason, ids=sorted(ids)))
-    add('raw_records_lost', old_raw.keys()-new_raw.keys())
+    # 보관 기간이 지나 정리한 기록만 raw에서 빠질 수 있습니다. 공개 중이거나 기간 안의 기록은 지울 수 없습니다.
+    pruned = set(pruned_ids)
+    cutoff = retention_cutoff(now)
+    add('raw_records_lost', old_raw.keys()-new_raw.keys()-pruned)
+    add('pruned_record_still_public', pruned & new.keys())
+    add('pruned_record_in_retention', {i for i in pruned & old_raw.keys() if not raw_expired(old_raw[i], cutoff)})
     add('public_record_not_in_raw', new.keys()-new_raw.keys())
     # 병원 자체 소식 제외만 정당한 공개 목록 감소입니다. raw에 사유와 함께 남아 있어야 합니다.
     explained = set(excluded_ids)

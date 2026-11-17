@@ -9,7 +9,8 @@ import unittest
 
 import rss_collector
 import update_news
-from publication_safety import publication_errors, PublicationBlocked
+from datetime import datetime, timedelta, timezone
+from publication_safety import publication_errors, prune_raw, PublicationBlocked, RAW_RETENTION_DAYS
 
 
 def article(article_id='a'):
@@ -129,5 +130,45 @@ class PublicationPreservationTests(unittest.TestCase):
         errors=publication_errors([],[],[bad],[bad])
         self.assertIn('a',{id for error in errors for id in error['ids']})
 
+
+
+class RawRetentionTests(unittest.TestCase):
+    """보관 기간(RAW_RETENTION_DAYS)이 지난 비공개 원본만 정리하고, 그 밖의 삭제는 계속 막는지 확인합니다."""
+    NOW = datetime(2026, 11, 17, 6, 0, tzinfo=timezone.utc)
+
+    def dated(self, article_id, days_ago):
+        return dict(article(article_id), date=(self.NOW-timedelta(days=days_ago)).isoformat())
+
+    def test_prune_keeps_public_recent_undated_and_protected(self):
+        rows=[self.dated('old',30),self.dated('public-old',30),self.dated('recent',3),dict(article('undated'),date=''),
+              self.dated('edge',RAW_RETENTION_DAYS-1),self.dated('dup-old',40)]
+        kept,pruned=prune_raw(rows,{'public-old','dup-old'},self.NOW)
+        self.assertEqual(pruned,{'old'})
+        self.assertEqual([r['id'] for r in kept],['public-old','recent','undated','edge','dup-old'])
+
+    def test_guard_allows_only_expired_non_public_pruning(self):
+        a,old,recent=self.dated('a',1),self.dated('old',30),self.dated('recent',2)
+        self.assertEqual(publication_errors([a],[a,old,recent],[a],[a,recent],pruned_ids={'old'},now=self.NOW),[])
+        reasons=lambda errors:{e['reason'] for e in errors}
+        # 정리 목록에 없는 삭제, 기간 안의 기록 삭제, 공개 중인 기록 삭제는 모두 막습니다.
+        self.assertIn('raw_records_lost',reasons(publication_errors([a],[a,old,recent],[a],[a],pruned_ids={'old'},now=self.NOW)))
+        self.assertIn('pruned_record_in_retention',reasons(publication_errors([a],[a,old,recent],[a],[a,old],pruned_ids={'recent'},now=self.NOW)))
+        self.assertIn('pruned_record_still_public',reasons(publication_errors([a],[a,old],[a],[a],pruned_ids={'a'},now=self.NOW)))
+
+    def test_update_prunes_expired_raw_and_keeps_public(self):
+        # 운영에서는 공개 5,000건이 이미 차 있어 오래된 기사는 공개되지 않습니다. 같은 상황을 공개 한도 1건으로 만듭니다.
+        now=datetime.now(timezone.utc)
+        public=dict(article('a'),date=(now-timedelta(days=40)).isoformat())
+        expired=dict(article('x'),date=(now-timedelta(days=RAW_RETENTION_DAYS+5)).isoformat())
+        recent=dict(article('y'),date=(now-timedelta(days=2)).isoformat())
+        original=rss_collector.publish_university_articles
+        with TemporaryDirectory() as directory, patch.object(rss_collector,'publish_university_articles',
+                                                             side_effect=lambda *a,**k:original(*a,**dict(k,limit=1))):
+            root=Path(directory)
+            (root/'news.json').write_text(json.dumps(dict(news=[public],raw_news=[public,expired,recent],status={})),encoding='utf-8')
+            output=mock_run(root)
+        self.assertEqual([r['id'] for r in output['news']],['a'])
+        self.assertEqual(sorted(r['id'] for r in output['raw_news']),['a','y'])  # 공개 중인 a는 40일이 지나도 남음
+        self.assertEqual(output['status']['raw_pruned'],1)
 
 if __name__=='__main__':unittest.main()

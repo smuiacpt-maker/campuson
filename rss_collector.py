@@ -25,7 +25,7 @@ from article_categories import classify_category
 from rss_searches import build_search_plan, select_search_batch
 from classification_monitor import build_report
 from rss_summaries import select_summary, preserve_summary, USEFUL_KINDS
-from publication_safety import merge_raw_record, merge_raw_sources, region_review, publication_errors, verified_unknown_fill, verified_campus_correction, estimate_policy_update, version_decision
+from publication_safety import merge_raw_record, merge_raw_sources, prune_raw, region_review, publication_errors, verified_unknown_fill, verified_campus_correction, estimate_policy_update, version_decision
 
 
 class PlainText(HTMLParser):
@@ -171,6 +171,7 @@ class Collector:
         self.search_cursor = 0
         self.region_change_reviews = []
         self.new_article_ids = set()
+        self.pruned_ids = set()
         self.status = dict(state='collecting', lastSuccess=None, errors=[], sources=[])
         try:
             cached = json.loads(CACHE.read_text(encoding='utf-8'))
@@ -327,7 +328,14 @@ class Collector:
                 news = sorted(news+additions, key=lambda n: n.get('date', ''), reverse=True)[:MAX_ARTICLES]
             news, excluded_ids = publish_university_articles(news, unique_news, {r['id']: r for r in raw_news},
                                                              previous_public=public_by_id)
-            violations = publication_errors(previous_news, previous_raw, news, raw_news, new_ids, excluded_ids)
+            # 보관 기간(RAW_RETENTION_DAYS)이 지난 비공개 원본 기록을 정리합니다. 공개 중이거나 직전 공개,
+            # 병원 제외 판정, 공개 기사의 중복 링크에 쓰이는 기록은 남깁니다.
+            keep_ids = {row['id'] for row in news} | {row['id'] for row in previous_news} | set(excluded_ids)
+            for row in news:
+                keep_ids |= set(row.get('duplicate_ids', []))
+            raw_news, pruned_ids = prune_raw(raw_news, keep_ids)
+            new_ids -= pruned_ids  # 다시 받은 오래된 기사는 새 기사로 세지 않습니다.
+            violations = publication_errors(previous_news, previous_raw, news, raw_news, new_ids, excluded_ids, pruned_ids)
             classification_report['region_change_reviews'] = self.region_change_reviews
             if violations:
                 self.status.update(state='error', safety_violations=violations)
@@ -335,6 +343,8 @@ class Collector:
                 return
             self.raw_news, self.news = raw_news, news
             self.new_article_ids = new_ids
+            self.pruned_ids = pruned_ids
+            self.status['raw_pruned'] = len(pruned_ids)
             self.excluded_ids = excluded_ids
             if successes:
                 self.status['lastSuccess'] = datetime.now(timezone.utc).isoformat()

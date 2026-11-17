@@ -49,7 +49,7 @@ def update_news(root=None):
     raw=getattr(collector, 'raw_news', previous_raw)
     reviews=getattr(collector, 'region_change_reviews', [])
     violations=publication_errors(previous.get('news', []),previous_raw,news,raw,getattr(collector,'new_article_ids',set()),
-                                getattr(collector,'excluded_ids',set()))
+                                getattr(collector,'excluded_ids',set()),getattr(collector,'pruned_ids',set()))
     if violations: block_publication(root, '공개 교체 전 데이터 보존 검사 실패', violations)
     output=dict(previous,news=news,raw_news=raw,raw_news_schema_version=1,region_change_reviews=reviews,
                 status=status,search_cursor=collector.search_cursor)

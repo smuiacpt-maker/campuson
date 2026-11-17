@@ -39,6 +39,13 @@ Python 3.9 이상. API 키와 추가 패키지는 필요하지 않습니다.
 - RSS는 최근 100건만 주며 `prt`를 늘리거나 `Fi` 페이징으로 101번째 이후를 요청하면 0건이 옵니다(2026-11 확인). 대신 공고일 조회(`dt=YYYYMMDD`)는 과거(2024년 이전 포함)도 됩니다. 과거 공고 채우기: `python rnd_collector.py --backfill 2026-01-01` (하루씩 조회, 0.5초 간격, 실패한 날짜는 끝에 표시).
 - 직접 수집: `python rnd_collector.py` / 테스트: `python -m unittest test_rnd_collector`, `node test_rnd.cjs`.
 
+## 원본 기록 보관 기간
+
+- 공개 목록(`news.json`)은 최신 대학 기사 5,000건이고, 중복 판별·재검증용 원본 기록은 `_internal/news-preservation.json`에 보관합니다.
+- 원본 기록은 기사 게시 시각 기준 **14일**(`publication_safety.py`의 `RAW_RETENTION_DAYS`)이 지나면 정리합니다. 공개 중이거나 직전 공개 기사, 병원 제외 판정, 공개 기사의 중복 링크에 쓰이는 기록은 기간이 지나도 남깁니다.
+- 보존 검사는 기간이 지난 비공개 기록의 정리만 허용하고, 그 밖의 원본 기록 삭제는 계속 막습니다.
+- 정리하지 않으면 하루 약 3MB씩 늘어 GitHub 파일 한도(100MB)를 넘고 자동 갱신 push가 실패합니다. 14일 기준 약 45MB입니다(2026-11-17). 지운 기록은 git 기록에 남아 있습니다.
+
 ## 소스 추가
 
 rss_sources.json에 name, url, enabled 항목을 추가하세요. 다음 수집부터 반영됩니다. 즉시 적용하려면 서버를 재시작하세요.
