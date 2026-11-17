@@ -44,17 +44,6 @@ nav{gap:56px}
 .hero-vertical{position:absolute;right:26px;top:80px;writing-mode:vertical-rl;letter-spacing:.25em;font-size:9px;color:#c7d8e5}
 .illustration{display:none}
 
-/* 빠른 메뉴: 히어로 아래에 겹쳐 놓은 흰 카드 */
-.quick{position:relative;z-index:2;display:grid;grid-template-columns:1.25fr repeat(5,1fr);align-items:center;min-height:118px;margin-top:-40px;background:#fff;box-shadow:0 9px 35px #15344f14;border-bottom:1px solid var(--line)}
-.quick-title{padding-left:26px}
-.quick-title small{display:block;font-size:10px;letter-spacing:.12em;color:var(--teal);font-weight:800;margin-bottom:8px}
-.quick-title strong{font-size:18px;color:var(--ink)}
-.quick>button{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;border-left:1px solid #e8ecee;background:none;font-size:12px;font-weight:600;color:var(--ink);padding:8px 6px}
-.quick>button>span{font-size:27px;line-height:1.2;color:#37697f}
-.quick>button b{position:absolute;right:12px;top:2px;font-weight:400;color:#82939f;font-size:12px}
-.quick>button:hover{color:var(--teal)}
-.quick>button:hover>span{color:var(--teal)}
-
 /* 공통 영역: 각진 모서리, 차가운 회색 */
 .workspace{padding-top:60px}
 .eyebrow{color:var(--teal);letter-spacing:.17em;font-size:11px;font-weight:700}
@@ -122,12 +111,11 @@ dialog::backdrop{background:#0b1f3480}
 .export-status{border-radius:0;background:#eef6f6;border-color:#bcd9da;color:#164a55}
 
 @media(max-width:1250px){.utility-inner,header,.hero-inner{padding-left:30px;padding-right:30px}}
-@media(max-width:900px){nav{gap:28px}.quick{grid-template-columns:repeat(5,1fr)}.quick-title{display:none}}
+@media(max-width:900px){nav{gap:28px}}
 @media(max-width:760px){
   .utility-inner>span{display:none}.utility-inner{justify-content:flex-end;padding:0 18px}
   header{height:72px;padding:0 18px;gap:18px}nav{gap:16px}.nav{font-size:12px}
   .hero{height:380px}.hero-inner{padding:44px 18px 0}.hero h1{font-size:31px}.hero p{font-size:13px}
   .hero-vertical{display:none}
-  .quick{margin-top:-24px;min-height:92px}.quick>button{font-size:10px;gap:6px;padding:6px 2px}.quick>button>span{font-size:21px}.quick>button b{display:none}
   .category{font-size:13px;margin-right:18px}
 }
