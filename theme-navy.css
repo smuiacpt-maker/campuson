@@ -1,0 +1,133 @@
+/* 네이비·틸 테마 (design/navy-teal 시안)
+   style.css 위에 덮어씁니다. 이 파일과 index.html의 <link>를 빼면 기존 디자인으로 돌아갑니다. */
+:root{--navy:#102d4b;--teal:#007c83;--teal-light:#3cc7bc;--green:#007c83;--ink:#172b3f;--muted:#75808b;--line:#e3e9ed;--soft:#f3f6f8}
+body{color:var(--ink);letter-spacing:-.04em;overflow-x:clip}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline-color:#16b2b1}
+
+/* 상단 안내줄 + 헤더 */
+.utility{background:var(--soft);border-bottom:1px solid #e8ecef;font-size:11px;color:#76818b}
+.utility-inner{max-width:1196px;margin:auto;height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 2px}
+.utility-inner>div{display:flex;gap:22px}
+.utility a:hover{color:var(--teal)}
+.site-header{background:#fff;border-bottom:1px solid var(--line);position:relative;z-index:5}
+header{max-width:1196px;height:96px;padding:0;gap:70px}
+.brand{font-size:22px;font-weight:800;letter-spacing:-.07em;color:var(--navy)}
+.logo{background:var(--navy);border-radius:50%;width:38px;height:38px;line-height:38px;font-size:20px;box-shadow:inset 0 0 0 3px #fff,0 0 0 2px var(--teal)}
+.brand-sub{font-size:9px;letter-spacing:.14em;font-weight:700;color:var(--teal)}
+nav{gap:56px}
+.nav{font-size:15px;font-weight:700;color:var(--ink)}
+.nav:hover{color:var(--teal)}
+.nav.active{color:var(--navy)}
+.nav.active:after{background:var(--teal);bottom:-1px}
+.nav span{background:#e5f2f2;color:var(--teal);border-radius:3px}
+.header-note{color:#8a96a0;font-size:11px;letter-spacing:.02em}
+
+/* 히어로: 화면 전체 폭 네이비 배경 */
+.hero{position:relative;display:block;min-height:0;height:470px;margin:0 calc(50% - 50vw);padding:0;border-radius:0;background:var(--navy);color:#fff;overflow:hidden}
+.hero-bg{position:absolute;inset:0;
+  background:
+    linear-gradient(110deg,transparent 58%,#008a8c33 58.1%,#008a8c14 76%,transparent 76.1%),
+    linear-gradient(90deg,#092a46 8%,#092a46ee 38%,#0d3a5fcc 70%,#14507a99),
+    repeating-linear-gradient(90deg,transparent 0 79px,#ffffff0d 79px 80px),
+    repeating-linear-gradient(0deg,transparent 0 79px,#ffffff0a 79px 80px),
+    radial-gradient(circle at 78% 30%,#1f6f8f 0,transparent 45%),
+    #102d4b}
+.hero>.hero-bg{z-index:0}
+.hero-inner{position:relative;z-index:1;max-width:1196px;margin:auto;padding:70px 2px 0}
+.hero .eyebrow{color:#72cece;letter-spacing:.19em;font-size:11px}
+.hero h1{font-size:50px;line-height:1.35;letter-spacing:-.055em;font-weight:700;margin:16px 0 18px;color:#fff}
+.hero h1 span{color:var(--teal-light)}
+.hero p{color:#d1dde7;font-size:16px;line-height:1.9;margin:0 0 22px}
+.hero-link{display:inline-flex;align-items:center;gap:40px;border-bottom:1px solid #ffffff66;padding:12px 0;font-size:13px;font-weight:600;color:#fff}
+.hero-link span{font-size:20px}
+.hero .hero-caption{margin:34px 0 0;font-size:9px;letter-spacing:.14em;color:#b6c5d2}
+.hero-vertical{position:absolute;right:26px;top:80px;writing-mode:vertical-rl;letter-spacing:.25em;font-size:9px;color:#c7d8e5}
+.illustration{display:none}
+
+/* 빠른 메뉴: 히어로 아래에 겹쳐 놓은 흰 카드 */
+.quick{position:relative;z-index:2;display:grid;grid-template-columns:1.25fr repeat(5,1fr);align-items:center;min-height:118px;margin-top:-40px;background:#fff;box-shadow:0 9px 35px #15344f14;border-bottom:1px solid var(--line)}
+.quick-title{padding-left:26px}
+.quick-title small{display:block;font-size:10px;letter-spacing:.12em;color:var(--teal);font-weight:800;margin-bottom:8px}
+.quick-title strong{font-size:18px;color:var(--ink)}
+.quick>button{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;border-left:1px solid #e8ecee;background:none;font-size:12px;font-weight:600;color:var(--ink);padding:8px 6px}
+.quick>button>span{font-size:27px;line-height:1.2;color:#37697f}
+.quick>button b{position:absolute;right:12px;top:2px;font-weight:400;color:#82939f;font-size:12px}
+.quick>button:hover{color:var(--teal)}
+.quick>button:hover>span{color:var(--teal)}
+
+/* 공통 영역: 각진 모서리, 차가운 회색 */
+.workspace{padding-top:60px}
+.eyebrow{color:var(--teal);letter-spacing:.17em;font-size:11px;font-weight:700}
+.feed-heading h2{font-size:30px;letter-spacing:-.06em;color:var(--ink)}
+.region-filter{background:var(--soft);border:0;border-top:2px solid var(--navy);border-radius:0}
+#regionPanel{border-radius:0;border-color:var(--line)}
+.region{border-radius:0}
+.region.active{background:var(--navy)}
+.period-filter{border-radius:0;background:#fff;border-color:var(--line)}
+#regionToggle{border-radius:0;border-color:var(--navy);color:var(--navy)}
+#regionToggle:hover{background:var(--navy);color:#fff}
+.region:hover{background:#eef3f6;border-color:#b9cad6}
+.region-option{border-radius:0;color:#4e5d6b}
+.region-option:hover{background:var(--soft)}
+.region-option.selected{background:#e8f3f3;color:var(--teal)}
+.region-option input{accent-color:var(--teal)}
+.period-buttons button{border-radius:0;border-color:var(--line);color:#5d6b77}
+.period-buttons button.active{background:var(--navy);border-color:var(--navy)}
+.duplicate-note{background:var(--soft);border-radius:0}
+.rnd-group{border-bottom-color:var(--line)}
+.notice{background:var(--soft);border:0;border-left:3px solid var(--teal);border-radius:0;color:#66717c}
+.searchbox{border-radius:0;border:0;border-bottom:2px solid var(--navy);padding:10px 4px}
+.searchbox>span{color:var(--navy)}
+.categories{gap:0;border-bottom:1px solid var(--line);padding:22px 0 0;margin-bottom:18px}
+.category{border:0;border-radius:0;background:none;padding:0 0 16px;margin-right:27px;font-size:15px;color:#929aa2}
+.category.active{background:none;color:var(--navy);font-weight:800;border-bottom:3px solid var(--teal)}
+.list-toolbar{border-bottom-color:var(--line)}
+.list-toolbar b{color:var(--teal)}
+.export-excel{border-radius:0;background:#fff;border-color:#bcd9da;color:var(--teal)}
+.export-excel:hover{background:#e9f4f4}
+.news-card{padding:24px 0;border-bottom-color:#edf0f2}
+.news-card:hover .title-button{color:var(--teal)}
+.university-mark{border-radius:0;background:var(--soft);color:#37697f}
+.title-button{color:var(--ink);font-size:16px}
+.title-button:hover{color:var(--teal)}
+.meta strong{color:var(--navy)}
+.tag{background:#fff;border:1px solid #d1e4e4;color:var(--teal);border-radius:0;padding:3px 8px}
+.bookmark.saved{color:var(--teal)}
+.more{border-radius:0;border-color:var(--navy);color:var(--navy);font-weight:700}
+.more:hover{background:var(--navy);color:#fff}
+.empty button{border-radius:0;background:var(--navy)}
+footer{border-top:2px solid var(--navy)}
+footer .brand{color:var(--navy)}
+
+/* R&D 공고 */
+.rnd-filters{border-radius:0;background:var(--soft);border:0}
+.rnd-chip{border-radius:0}
+.rnd-chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy)}
+.rnd-status{border-radius:0}
+.rnd-status-open{background:#e3f3f3;color:var(--teal)}
+.rnd-status-soon{background:#e8eef6;color:#2b4f7e}
+.rnd-tag{border-radius:0;background:#fff;border:1px solid #d1e4e4;color:var(--teal)}
+.rnd-card h3 a:hover{color:var(--teal)}
+.rnd-reset{color:var(--teal)}
+
+/* 엑셀 저장 창 */
+dialog,dialog.export-dialog{border-radius:4px}
+dialog::backdrop{background:#0b1f3480}
+.export-dialog-icon{border-radius:0;background:#e3f3f3;color:var(--teal)}
+.export-field{border-radius:0}
+.export-field:focus-within{border-color:var(--teal);box-shadow:0 0 0 4px #007c831a}
+.export-dialog-actions button{border-radius:0}
+.export-confirm{background:var(--navy);box-shadow:none}
+.export-confirm:hover{background:#0a2038}
+.export-status{border-radius:0;background:#eef6f6;border-color:#bcd9da;color:#164a55}
+
+@media(max-width:1250px){.utility-inner,header,.hero-inner{padding-left:30px;padding-right:30px}}
+@media(max-width:900px){nav{gap:28px}.quick{grid-template-columns:repeat(5,1fr)}.quick-title{display:none}}
+@media(max-width:760px){
+  .utility-inner>span{display:none}.utility-inner{justify-content:flex-end;padding:0 18px}
+  header{height:72px;padding:0 18px;gap:18px}nav{gap:16px}.nav{font-size:12px}
+  .hero{height:380px}.hero-inner{padding:44px 18px 0}.hero h1{font-size:31px}.hero p{font-size:13px}
+  .hero-vertical{display:none}
+  .quick{margin-top:-24px;min-height:92px}.quick>button{font-size:10px;gap:6px;padding:6px 2px}.quick>button>span{font-size:21px}.quick>button b{display:none}
+  .category{font-size:13px;margin-right:18px}
+}
