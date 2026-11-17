@@ -1,0 +1,459 @@
+'use strict';
+const { categories } = window.CAMPUS_DATA;
+const isListed=article=>article.relevance!=='hospital_excluded';
+let news=selectPublicRepresentatives((window.CAMPUS_DATA.news||[]).filter(isListed),window.CAMPUS_DATA.status?.public_story_groups||[]);
+let rssStatus=window.CAMPUS_DATA.status;
+const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateLabel=value=>{
+ const date=new Date(value);
+ if(!value||Number.isNaN(date.getTime()))return '게시 시각 미제공';
+ const parts=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date);
+ const part=type=>parts.find(p=>p.type===type).value;
+ return `${part('year')}.${part('month')}.${part('day')} ${part('hour')}:${part('minute')}`;
+};
+const inRegion=(n,region)=>{
+ const assigned=(Array.isArray(n.regions)?n.regions:[n.region]).filter(r=>r&&r!=='지역 미분류');
+ return region==='지역 미분류'?assigned.length===0:assigned.includes(region);
+};
+// 소식 데이터 유무와 관계없이 모든 시·도 버튼을 표시합니다.
+const regions = ['전체 지역', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '경기도', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주', '전국', '해외', '지역 미분류'];
+let saved=new Set();try{const value=JSON.parse(localStorage.getItem('campus-on-saved')||'[]');if(Array.isArray(value))saved=new Set(value.filter(x=>typeof x==='string'));}catch{}
+const isArticleSaved=article=>(article.duplicate_ids||[article.id]).some(id=>saved.has(id));
+function selectPublicRepresentatives(rows,groups=[]){
+ if(!Array.isArray(groups))return rows;
+ const byId=new Map(rows.map(row=>[row.id,row])),hidden=new Set(),claimed=new Set(),replacements=new Map();
+ for(const group of groups){
+  if(!group||typeof group!=='object')continue;
+  const ids=group.article_ids;
+  if(!Array.isArray(ids)||ids.length<2||new Set(ids).size!==ids.length||!ids.includes(group.representative_id)||ids.some(id=>!byId.has(id)||claimed.has(id)))continue;
+  const representative=byId.get(group.representative_id);
+  // Never hide unique searchable/filterable/exported content, even if stale
+  // server metadata incorrectly claims that two articles are duplicates.
+  if(![4,5,6,7].includes(group.version))continue;
+  // 묶을 때 지역·유형이 달라졌다면 숨긴 기사만의 필터 결과가 사라지므로 표시합니다.
+  // 같은 제목 묶음(6)과 같은 사건 묶음(7)은 대표 기사가 묶음 전체의 지역·유형으로 검색되게 합니다.
+  // 같은 사건 묶음(7)은 대학이 같을 때만 숨깁니다.
+  const visibleKeys=group.version===6?[]:group.version===7?['school_names']:group.version===5?['school_names','regions','category']:['title','body','school','school_names','school_aliases','regions','region','city','category','source','date','url','original_url'];
+  // 같은 사건 묶음(7)은 대학 순서만 다른 기사도 같은 대학으로 봅니다.
+  const comparable=(row,key)=>JSON.stringify(group.version===7&&key==='school_names'?[...(row[key]||[])].sort():row[key]);
+  if(ids.some(id=>visibleKeys.some(key=>comparable(byId.get(id),key)!==comparable(representative,key))))continue;
+  const aliases=new Set(ids.flatMap(id=>byId.get(id).duplicate_ids||[id]));ids.forEach(id=>aliases.add(id));
+  const related_reports=group.version>=5?ids.filter(id=>id!==representative.id).map(id=>byId.get(id)):[];
+  const merged={...representative,duplicate_ids:[...aliases],duplicate_count:aliases.size,related_reports};
+  if(group.version===6||group.version===7){
+   merged.regions=[...new Set(ids.flatMap(id=>byId.get(id).regions||[]))].sort();
+   merged.filter_categories=[...new Set(ids.map(id=>byId.get(id).category))];
+  }
+  replacements.set(representative.id,merged);
+  ids.forEach(id=>{claimed.add(id);if(id!==representative.id)hidden.add(id);});
+ }
+ return rows.filter(row=>!hidden.has(row.id)).map(row=>replacements.get(row.id)||row);
+}
+// 대학 로고는 university-logos.js에 등록된(사용 조건이 확인된) 것만 씁니다.
+// 대학이 하나로 확인된 기사만 로고를 붙이고, 캠퍼스 전용 로고는 기사에서 그 캠퍼스가 확인될 때만 씁니다.
+const DEFAULT_UNIVERSITY_MARK='<svg class="mark-default" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 2.5 8v2h19V8L12 3Zm-7 9v6h2v-6H5Zm4 0v6h2v-6H9Zm4 0v6h2v-6h-2Zm4 0v6h2v-6h-2ZM3 20v2h18v-2H3Z" fill="currentColor"/></svg>';
+function findUniversityLogo(article,registry){
+ const entries=Array.isArray(registry?.entries)?registry.entries:[];
+ const schools=(article.school_names||[]).filter(name=>name&&!['대학명 미확인','대학 일반'].includes(name));
+ if(schools.length!==1)return null;
+ const school=schools[0];
+ const valid=entry=>entry&&typeof entry.file==='string'&&/^logos\/[\w.\-\/]+\.(?:svg|png|webp|jpg)$/i.test(entry.file)&&!entry.file.includes('..');
+ const candidates=entries.filter(entry=>valid(entry)&&(entry.school===school||(entry.aliases||[]).includes(school)));
+ const campuses=new Set((article.universities||[]).filter(u=>u.name===school&&['matched','region_only'].includes(u.campus_status)).flatMap(u=>u.campus_names||[]));
+ return candidates.find(entry=>entry.campus&&campuses.has(entry.campus))||candidates.find(entry=>!entry.campus)||null;
+}
+function universityMarkHtml(article,registry){
+ const logo=findUniversityLogo(article,registry);
+ if(!logo)return `<div class="university-mark" aria-hidden="true">${DEFAULT_UNIVERSITY_MARK}</div>`;
+ return `<div class="university-mark has-logo" aria-hidden="true"><img src="${escapeHtml(logo.file)}" alt="" loading="lazy" decoding="async"></div>`;
+}
+function normalizeSearch(value){return String(value||'').normalize('NFKC').toLowerCase().replace(/\s+/g,'');}
+function matchesSearch(article,query){
+ if(!query.trim())return true;
+ const related=(article.related_reports||[]).flatMap(report=>[report.title,report.body,report.source]);
+ const text=normalizeSearch([article.school,...(article.school_names||[]),...(article.school_aliases||[]),article.title,article.body,article.city,article.region,article.source,...related].join(' '));
+ if(text.includes(normalizeSearch(query)))return true;
+ return query.trim().split(/\s+/).every(term=>text.includes(normalizeSearch(term)));
+}
+const state={selectedRegions:new Set(),category:'전체',query:'',sort:'newest',savedOnly:false,limit:7,period:'all',startDate:'',endDate:''};
+const $=id=>document.getElementById(id);
+function koreanDay(value){
+ const stamp=new Date(value).getTime();
+ return Number.isNaN(stamp)?'':new Date(stamp+9*60*60*1000).toISOString().slice(0,10);
+}
+function periodBounds(period=state.period){
+ if(period==='all')return {start:'',end:'',error:''};
+ if(period==='custom'){
+ const error=!state.startDate||!state.endDate?'시작일과 종료일을 모두 선택해 주세요.':state.startDate>state.endDate?'종료일은 시작일보다 빠를 수 없습니다.':'';
+ return {start:state.startDate,end:state.endDate,error};
+ }
+ const today=koreanDay(new Date());
+ const days=period==='7days'?7:period==='30days'?30:1;
+ const start=new Date(Date.parse(today+'T00:00:00Z')-(days-1)*86400000).toISOString().slice(0,10);
+ return {start,end:today,error:''};
+}
+function withinPeriod(article,bounds,period=state.period){
+ if(period==='all')return true;
+ if(bounds.error||!article.date)return false;
+ const day=koreanDay(article.date);
+ return !!day&&day>=bounds.start&&day<=bounds.end;
+}
+let exportRows=[];
+let exporting=false;
+let exportNoticeTimer;
+function clearExportNotice(){
+ clearTimeout(exportNoticeTimer);
+ $('exportStatus').textContent='';
+}
+function showExportNotice(message){
+ clearExportNotice();
+ $('exportStatus').textContent=message;
+ exportNoticeTimer=setTimeout(()=>{$('exportStatus').textContent='';},5000);
+}
+function showUniversityAddresses(article){
+ const related=article.related_reports||[];
+ $('detailDuplicates').textContent=related.length?`같은 주제의 다른 기사 보기 (${related.length}건)`:article.duplicate_count>1?`같은 내용의 기사 ${article.duplicate_count}건 중 RSS 요약과 제목에 확인된 정보가 더 많은 대표 기사를 표시합니다.`:'';
+ for(const report of related){
+ const line=document.createElement(/^https?:\/\//.test(report.original_url||report.url||'')?'a':'span');line.className='related-report';
+ line.textContent=`${report.title} · ${report.source||'출처 미상'} · ${dateLabel(report.date)}`;
+ if(line.tagName==='A'){line.href=report.original_url||report.url;line.target='_blank';line.rel='noopener noreferrer';}
+ $('detailDuplicates').append(line);
+ }
+ const box=$('detailLocations');box.replaceChildren();
+ if(article.foreign_universities?.length){const p=document.createElement('p');p.textContent='기사의 해외 대학: '+article.foreign_universities.join(' / ');box.append(p);}
+ if(article.background_universities?.length){const p=document.createElement('p');p.textContent='학력·출신 정보로만 언급되어 소재지에서 제외: '+[...new Set(article.background_universities.map(u=>u.name))].join(' / ');box.append(p);}
+ if(article.mentioned_regions?.length){const p=document.createElement('p');p.textContent='기사에 명시된 지역: '+article.mentioned_regions.map(place=>`${place.region} (${place.method==='summary_region'?'RSS 요약':'제목'}: “${place.text}”)`).join(' / ');box.append(p);}
+ for(const program of article.education_programs||[]){
+ const p=document.createElement('p');p.textContent=`${program.name} · ${program.region}\n${program.kind} / 운영 지자체: ${program.locality} (일반 대학교와 구분)`;box.append(p);
+ const link=document.createElement('a');link.href=program.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='교육과정 운영 근거 확인 ↗';box.append(link);
+ }
+ if(!article.universities?.length){if(!article.mentioned_regions?.length)box.textContent='국내 대학 주소나 명시된 지역을 확인하지 못해 지역 미분류로 표시합니다.';return;}
+ const heading=document.createElement('strong');heading.textContent='대학 · 캠퍼스 소재지 확인';box.append(heading);
+ for(const university of article.universities){
+ const p=document.createElement('p');
+ const status=university.region_resolution==='campus_candidates'?'기사에 캠퍼스가 명시되지 않아 확인된 캠퍼스 소재 지역을 모두 표시합니다(추정 분류).':university.region_resolution==='national_network'?'캠퍼스가 명시되지 않은 전국 단위 기사입니다.':university.region_resolution==='main_campus_default'?'기사에 캠퍼스가 명시되지 않아 본교 소재지 기준으로 분류했습니다.':university.method==='national_network'?'대학명은 확인했지만 기사에 캠퍼스가 명시되지 않아 지역을 특정하지 못했습니다.':university.affiliation_type==='university_hospital'?`확인된 대학 부속기관: ${university.campus_names.join(' / ')}`:university.campus_status==='matched'?`확인된 캠퍼스: ${university.campus_names.join(' / ')}`:university.campus_status==='region_only'?`캠퍼스 지역 확인: ${university.campus_names.join(' / ')} (시·군·구만 확인, 상세 주소 미확인)`:university.campus_status==='unresolved'?`주소 미확인: ${university.campus_names.join(' / ')} (본교 주소로 대체하지 않습니다)`:'기사에서 캠퍼스를 특정하지 못했습니다. 아래는 등록된 소재지 후보입니다.';
+ p.textContent=`${university.name} · ${university.regions.join(' / ')||'지역 미분류'}\n${status}`;
+ box.append(p);
+ if(university.campuses?.length){
+ for(const campus of university.campuses){
+ const address=document.createElement('p');address.className='campus-address';
+ address.textContent=`${campus.name} · ${campus.region}\n${campus.address||'상세 주소 미확인'}`;box.append(address);
+ if(campus.source){const source=document.createElement('a');source.href=campus.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent=campus.source.includes('data.go.kr')?'공공 주소 데이터 확인 ↗':campus.source.includes('mois.go.kr')?'시·군·구 확인 근거 ↗':'캠퍼스 공식 주소 안내 ↗';box.append(source);}
+ }
+ }else if(!university.campus_status){const address=document.createElement('p');address.textContent=university.addresses.join('\n');box.append(address);}
+ }
+}
+function render(){
+ const bounds=periodBounds();
+ const baseRows=news.filter(n=>(state.selectedRegions.size===0||[...state.selectedRegions].some(r=>inRegion(n,r)))&&(state.category==='전체'||(n.filter_categories||[n.category]).includes(state.category))&&(!state.savedOnly||isArticleSaved(n))&&matchesSearch(n,state.query));
+ const periodLabels={all:'전체',today:'오늘','7days':'최근 7일','30days':'최근 30일',custom:'직접 선택'};
+ document.querySelectorAll('[data-period]').forEach(button=>{
+ const period=button.dataset.period,active=period===state.period,range=periodBounds(period);
+ const count=baseRows.filter(n=>withinPeriod(n,range,period)).length;
+ button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+ button.textContent=periodLabels[period]+(period==='all'||range.error?'':` (${count}건)`);
+ button.title=range.error?range.error:`현재 지역·검색·유형 조건에서 ${count}건`;
+ });
+ $('customDates').hidden=state.period!=='custom';
+ $('periodError').textContent=bounds.error;
+ $('periodHint').textContent=state.period==='all'?'저장된 전체 기사 · 한국 시간 기준':bounds.error?'':`${bounds.start} ~ ${bounds.end} · 양 끝 날짜 포함 · 한국 시간 기준`;
+ $('regions').replaceChildren(...regions.map((name,i)=>{
+ const b=document.createElement('label');
+ const count=i===0?news.length:news.filter(n=>inRegion(n,name)).length;
+ const checked=i===0?state.selectedRegions.size===0:state.selectedRegions.has(name);
+ b.className='region-option'+(checked?' selected':'');
+ const input=document.createElement('input');input.type='checkbox';input.checked=checked;input.value=name;
+ input.setAttribute('aria-label',`${name}, 소식 ${count}건`);
+ const text=document.createElement('span');text.textContent=i===0?'전체':name;
+ const badge=document.createElement('small');badge.textContent=`${count}건`;
+ b.append(input,text,badge);
+ input.onchange=()=>{
+ if(i===0)state.selectedRegions.clear();
+ else if(input.checked)state.selectedRegions.add(name);
+ else state.selectedRegions.delete(name);
+ state.limit=7;render();
+ [...$('regions').querySelectorAll('input')].find(el=>el.value===name)?.focus({preventScroll:true});};
+ return b;
+ }));
+ $('categories').replaceChildren(...categories.map(name=>{const b=document.createElement('button');b.textContent=name;b.className='category'+(state.category===name?' active':'');b.setAttribute('aria-pressed',String(state.category===name));b.onclick=()=>{state.category=name;state.limit=7;render();};return b;}));
+ const regionLabel=state.selectedRegions.size?[...state.selectedRegions].join(' · '):'전국';
+ let rows=baseRows.filter(n=>withinPeriod(n,bounds));
+ if(!bounds.error)$('periodHint').textContent+=` · ${rows.length}건`;
+ rows.sort((a,b)=>state.sort==='name'?a.school.localeCompare(b.school,'ko'):!a.date&&!b.date?0:!a.date?1:!b.date?-1:state.sort==='oldest'?a.date.localeCompare(b.date):b.date.localeCompare(a.date));
+ exportRows=rows;
+ $('exportExcel').disabled=exporting||rows.length===0;
+ $('exportExcel').textContent=exporting?'엑셀 만드는 중…':`엑셀 다운로드 (${rows.length}건)`;
+ $('feedTitle').textContent=state.savedOnly?'관심 소식':`${regionLabel} 대학 소식`;
+ $('resultCount').innerHTML=`소식 <b>${rows.length}</b>건`;
+ const collecting=rssStatus.state==='collecting';
+ const searchProgress=rssStatus.search_plan_total?` 확장 검색: 회차당 최대 ${rssStatus.search_batch_size}개, 전체 ${rssStatus.search_plan_total}개 검색을 순환${collecting?` (현재 ${rssStatus.search_completed||0}개 완료)`:''}.`:'';
+ const stamp=rssStatus.lastSuccess?` 마지막 정상 수집: ${dateLabel(rssStatus.lastSuccess)}.`:'';
+ const errorText=rssStatus.errors?.length?' 일부 수집에 실패했습니다. 이전에 저장된 기사가 있으면 계속 표시합니다.':'';
+ const sourceNames=(rssStatus.sources||[]).map(s=>`${s.name}: ${s.ok?`전체 ${s.total??'?'}건 중 대학 관련 ${s.count}건`:'수집 실패'}`).join(' / ');
+ $('rssStatus').textContent=(collecting?'RSS를 수집하고 있습니다. 기존 기사는 계속 조회할 수 있습니다.':rssStatus.state==='error'?'RSS를 가져오지 못했습니다. 인터넷 연결과 RSS 주소를 확인해 주세요.':'RSS에서 대학 관련 기사를 수집합니다. 30분 간격으로 갱신합니다.')+searchProgress+stamp+errorText+(sourceNames?` (${sourceNames})`:'')+' 지역은 대학명과 대학 주소록을 대조해 분류합니다. SBS RSS는 개인의 비상업적 이용 기준으로 연결했습니다.';
+ $('savedCount').textContent=news.filter(isArticleSaved).length;const rndView=document.body.dataset.view==='rnd';$('allNews').classList.toggle('active',!rndView&&!state.savedOnly);$('savedNews').classList.toggle('active',!rndView&&state.savedOnly);
+ $('newsList').replaceChildren(...rows.slice(0,state.limit).map(n=>{
+ const card=document.createElement('article');card.className='news-card';
+ card.innerHTML=`${universityMarkHtml(n,window.UNIVERSITY_LOGOS)}<div class="card-main"><div class="meta"><strong>${escapeHtml(n.school)}</strong><span class="dot">·</span><span>${escapeHtml(n.city)}</span><span class="dot">·</span><span>${escapeHtml(n.source)}</span></div><button class="title-button">${escapeHtml(n.title)}</button><p class="excerpt">${escapeHtml(n.body)}</p><div class="published-at"><span>게시</span><time datetime="${escapeHtml(n.date)}">${escapeHtml(dateLabel(n.date))}</time><span class="timezone-label">한국 시간</span></div><span class="tag">${escapeHtml(n.category)}</span></div><button class="bookmark${isArticleSaved(n)?' saved':''}" aria-label="${escapeHtml(n.school)} 소식 ${isArticleSaved(n)?'저장 해제':'저장'}" aria-pressed="${isArticleSaved(n)}">${isArticleSaved(n)?'★':'☆'}</button>`;
+ // 로고 파일을 불러오지 못하면 기본 아이콘으로 바꿉니다.
+ card.querySelector('.university-mark img')?.addEventListener('error',event=>{const mark=event.target.parentElement;mark.classList.remove('has-logo');mark.innerHTML=DEFAULT_UNIVERSITY_MARK;},{once:true});
+ card.querySelector('.title-button').onclick=()=>{$('detailTitle').textContent=n.title;$('detailMeta').textContent=`${n.school} · ${n.city} · ${n.source} · ${dateLabel(n.date)}`;$('detailBody').textContent=n.body;showUniversityAddresses(n);$('official').href=n.original_url||n.url;$('official').textContent=n.via_google&&!n.original_url?'기사 보기 (구글 뉴스) ↗':'기사 원문 보기 ↗';$('detail').showModal();};
+ card.querySelector('.bookmark').onclick=()=>{if(isArticleSaved(n)){for(const id of n.duplicate_ids||[n.id])saved.delete(id);}else saved.add(n.id);try{localStorage.setItem('campus-on-saved',JSON.stringify([...saved]));}catch{}render();};return card;
+ }));$('empty').hidden=rows.length>0;$('more').hidden=rows.length<=state.limit;
+ const regionHasNews=state.selectedRegions.size===0||news.some(n=>[...state.selectedRegions].some(r=>inRegion(n,r)));
+ $('empty').querySelector('h3').textContent=regionHasNews?'조건에 맞는 소식이 없어요':'선택한 지역에 등록된 소식이 아직 없어요';
+ $('empty').querySelector('p').textContent=regionHasNews?'다른 검색어나 지역으로 다시 찾아보세요.':'다른 시·도를 선택해 소식을 확인해 보세요.';
+ if(!news.length){$('empty').querySelector('h3').textContent=collecting?'대학 소식을 가져오고 있어요':'수집된 대학 기사가 아직 없어요';$('empty').querySelector('p').textContent='RSS에 대학 관련 기사가 없거나 수집에 실패했을 수 있습니다. 예시 기사로 대체하지 않습니다.';}
+}
+$('search').addEventListener('input',e=>{state.query=e.target.value;state.limit=7;render();});
+$('sort').onchange=e=>{state.sort=e.target.value;state.limit=7;render();};
+$('allNews').onclick=()=>{state.savedOnly=false;state.limit=7;render();};
+$('savedNews').onclick=()=>{state.savedOnly=true;state.limit=7;render();};
+$('more').onclick=()=>{state.limit+=7;render();};
+$('reset').onclick=()=>{Object.assign(state,{selectedRegions:new Set(),category:'전체',query:'',sort:'newest',limit:7,period:'all',startDate:'',endDate:''});$('search').value='';$('sort').value='newest';$('startDate').value='';$('endDate').value='';render();};
+document.querySelectorAll('[data-period]').forEach(button=>button.onclick=()=>{state.period=button.dataset.period;state.limit=7;render();});
+for(const id of ['startDate','endDate'])$(id).addEventListener('change',event=>{state[id]=event.target.value;state.limit=7;render();});
+function setRegionPanel(open){$('regionPanel').hidden=!open;$('regionToggle').setAttribute('aria-expanded',String(open));}
+$('regionToggle').onclick=()=>setRegionPanel($('regionPanel').hidden);
+$('regionClose').onclick=()=>{setRegionPanel(false);$('regionToggle').focus();};
+$('regionPanel').addEventListener('keydown',e=>{if(e.key==='Escape'){setRegionPanel(false);$('regionToggle').focus();}});
+$('closeDetail').onclick=()=>$('detail').close();
+$('detail').addEventListener('click',e=>{if(e.target===$('detail')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
+render();
+
+
+
+// GitHub Pages에서 엑셀 파일을 직접 생성합니다.
+let xlsxLoader;
+
+function loadXlsxLibrary() {
+  if (window.XLSX) {
+    return Promise.resolve(window.XLSX);
+  }
+
+  if (!xlsxLoader) {
+    xlsxLoader = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+
+      script.src =
+        'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+
+      script.onload = () => {
+        if (window.XLSX) {
+          resolve(window.XLSX);
+        } else {
+          reject(
+            new Error('엑셀 라이브러리를 불러오지 못했습니다.')
+          );
+        }
+      };
+
+      script.onerror = () => {
+        reject(
+          new Error('엑셀 라이브러리 연결에 실패했습니다.')
+        );
+      };
+
+      document.head.append(script);
+    }).catch(error => {
+      xlsxLoader = null;
+      throw error;
+    });
+  }
+
+  return xlsxLoader;
+}
+
+// 엑셀 다운로드: 버튼을 누르면 파일 이름 창을 열고, 창에서 다운로드를 누르면 그 이름으로 저장합니다.
+$('exportExcel').onclick = () => {
+  if (exporting || !exportRows.length) {
+    return;
+  }
+  const input = $('exportFilename');
+  input.value = defaultExcelName(koreanDay(new Date()));
+  $('exportDialogSummary').textContent =
+    `현재 조건의 기사 ${exportRows.length.toLocaleString('ko-KR')}건을 지금 정렬 순서대로 저장합니다.`;
+  $('exportDialog').showModal();
+  input.focus();
+  input.select();
+};
+$('exportCancel').onclick = () => $('exportDialog').close();
+// 창 바깥(어두운 배경)을 누르면 닫습니다.
+$('exportDialog').onclick = event => {
+  if (event.target === $('exportDialog')) $('exportDialog').close();
+};
+$('exportForm').onsubmit = event => {
+  event.preventDefault();
+  const filename = excelFilename($('exportFilename').value, koreanDay(new Date()));
+  $('exportDialog').close();
+  return exportExcel(filename);
+};
+
+async function exportExcel(filename) {
+  if (exporting || !exportRows.length) {
+    return;
+  }
+
+  const rows = [...exportRows];
+
+  exporting = true;
+  render();
+  clearExportNotice();
+
+  try {
+    const XLSX = await loadXlsxLibrary();
+
+    // 엑셀 열 이름
+    const headers = [
+      '번호',
+      '기사 제목',
+      '대학명',
+      '지역',
+      '시·군·구',
+      '카테고리',
+      '언론사·출처',
+      '게시일 (한국 시간)',
+      '기사 요약',
+      '기사 URL'
+    ];
+
+    // 현재 화면의 필터 조건에 해당하는 기사
+    const values = rows.map((item, index) => {
+      const region =
+        Array.isArray(item.regions) && item.regions.length
+          ? item.regions.join(', ')
+          : item.region || '지역 미분류';
+
+      return [
+        index + 1,
+        item.title || '',
+        item.school || '',
+        region,
+        item.city || '',
+        item.category || '',
+        item.source || '',
+        item.date ? dateLabel(item.date) : '',
+        item.body || '',
+        item.original_url || item.url || ''
+      ];
+    });
+
+    // 엑셀 시트 생성
+    const sheet = XLSX.utils.aoa_to_sheet([
+      headers,
+      ...values
+    ]);
+
+    // 열 너비
+    sheet['!cols'] = [
+      { wch: 8 },
+      { wch: 55 },
+      { wch: 25 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 18 },
+      { wch: 22 },
+      { wch: 22 },
+      { wch: 75 },
+      { wch: 65 }
+    ];
+
+    // 엑셀 자동 필터
+    sheet['!autofilter'] = {
+      ref: `A1:J${values.length + 1}`
+    };
+
+    // 기사 URL을 클릭 가능한 하이퍼링크로 설정
+    for (let i = 0; i < values.length; i++) {
+      const articleUrl = values[i][9];
+
+      if (/^https?:\/\//i.test(articleUrl)) {
+        const cell = sheet[`J${i + 2}`];
+
+        if (cell) {
+          cell.l = {
+            Target: articleUrl,
+            Tooltip: '기사 원문 열기'
+          };
+        }
+      }
+    }
+
+    // 엑셀 파일 생성
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      sheet,
+      '대학 기사'
+    );
+
+    // 다운로드 실행
+    XLSX.writeFile(workbook, filename);
+
+    showExportNotice(
+      `선택한 조건의 기사 ${rows.length}건을 엑셀로 다운로드했습니다.`
+    );
+
+  } catch (error) {
+    showExportNotice(
+      `엑셀 다운로드 실패: ${error.message}`
+    );
+
+  } finally {
+    exporting = false;
+    render();
+  }
+}
+
+// 엑셀 파일 이름: 파일 이름에 쓸 수 없는 문자는 '_'로 바꾸고, 끝의 .xlsx는 한 번만 붙입니다.
+function defaultExcelName(day) {
+  return `대학기사_${day}`;
+}
+function excelFilename(value, day) {
+  let name = String(value ?? '').normalize('NFC')
+    .replace(/\.xlsx\s*$/i, '')
+    .replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[. ]+$/, '')
+    .slice(0, 100);
+  if (!name || /^_+$/.test(name)) name = defaultExcelName(day);
+  // Windows 예약 이름(CON, PRN, COM1 등)은 그대로 저장되지 않습니다.
+  if (/^(?:con|prn|aux|nul|com\d|lpt\d)$/i.test(name)) name += '_';
+  return `${name}.xlsx`;
+}
+// GitHub Pages에서 news.json 파일을 읽어옵니다.
+async function loadNews() {
+  try {
+    const response = await fetch('./news.json', {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      throw new Error('뉴스 데이터를 불러오지 못했습니다.');
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data.news)) {
+      throw new Error('뉴스 데이터 형식이 올바르지 않습니다.');
+    }
+
+    // 부속 병원 자체 소식은 목록·검색·필터·Excel에서 제외합니다. 원본은 news.json에 남아 있습니다.
+    news = selectPublicRepresentatives(data.news.filter(isListed), data.status?.public_story_groups || []);
+    rssStatus = data.status || rssStatus;
+
+    render();
+
+  } catch (error) {
+    $('rssStatus').textContent =
+      '뉴스 데이터를 불러오지 못했습니다. 기존 목록은 유지됩니다.';
+  }
+}
+
+// 최초 실행
+loadNews();
+
+// 60초마다 최신 뉴스 확인
+setInterval(loadNews, 60000);
