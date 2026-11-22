@@ -1,10 +1,10 @@
 {
   "total": 5000,
-  "classified": 4652,
-  "unclassified": 348,
-  "unclassified_percent": 6.96,
+  "classified": 4647,
+  "unclassified": 353,
+  "unclassified_percent": 7.06,
   "failure_reason_counts": {
-    "대학명 인식 실패": 342,
+    "대학명 인식 실패": 347,
     "대학 주소록 미등록": 41,
     "대학명 중복 또는 모호함": 1,
     "캠퍼스 특정 불가": 2,
@@ -425,6 +425,110 @@
   ],
   "reason_counts_overlap": true,
   "articles": [
+    {
+      "id": "ad39e0ddbc9a30e63c370aef",
+      "title": "논술 중 울린 '태블릿PC'…대학마다 다른 보안 기준",
+      "url": "https://news.sbs.co.kr/news/endPage.do?news_id=N1008858037&plink=RSSLINK&cooper=RSSREADER",
+      "extracted_universities": [],
+      "directory_matches": [],
+      "campus_checks": [],
+      "failure_reasons": [
+        "대학명 인식 실패"
+      ],
+      "review_reasons": [
+        "대학명 인식 실패"
+      ],
+      "classified": false,
+      "result": [],
+      "ambiguous_names": [],
+      "additional_confirmation_names": [],
+      "background_universities": [],
+      "conflicting_region_evidence": []
+    },
+    {
+      "id": "66361d9ce26c0380bef86d6c",
+      "title": "수능 혼란에 \"책임 통감\"…최교진 교육장관 사퇴",
+      "url": "https://news.sbs.co.kr/news/endPage.do?news_id=N1008858030&plink=RSSLINK&cooper=RSSREADER",
+      "extracted_universities": [],
+      "directory_matches": [],
+      "campus_checks": [],
+      "failure_reasons": [
+        "대학명 인식 실패"
+      ],
+      "review_reasons": [
+        "대학명 인식 실패"
+      ],
+      "classified": false,
+      "result": [],
+      "ambiguous_names": [],
+      "additional_confirmation_names": [],
+      "background_universities": [],
+      "conflicting_region_evidence": []
+    },
+    {
+      "id": "5335797a625dfe55700722a2",
+      "title": "공학 최강대학은 성균관·포스텍, 인문은 고려·서울대 [2026 대학평가]",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1OQVJBN2QtR0pxTUxEaTdIbzlrYzdBMzZkOG8zb0REMF9vWUdLQVVNMWxMZ3ItRk9ueXlDQWxZS1l4Y2lVQU9OUk5fQVBldHRjYTRMbC13?oc=5",
+      "extracted_universities": [
+        "서울대학교",
+        "최강대학",
+        "포항공과대학교"
+      ],
+      "directory_matches": [
+        {
+          "name": "포항공과대학교",
+          "matched": true,
+          "candidate_regions": [
+            "경북"
+          ],
+          "region_resolution": "unique_verified_location"
+        },
+        {
+          "name": "서울대학교",
+          "matched": true,
+          "candidate_regions": [
+            "서울"
+          ],
+          "region_resolution": "unique_verified_location"
+        },
+        {
+          "name": "최강대학",
+          "matched": false,
+          "candidate_regions": [],
+          "region_resolution": "directory_missing"
+        }
+      ],
+      "campus_checks": [
+        {
+          "name": "포항공과대학교",
+          "campuses": [],
+          "status": "not_specified",
+          "confirmed": false
+        },
+        {
+          "name": "서울대학교",
+          "campuses": [],
+          "status": "not_specified",
+          "confirmed": false
+        }
+      ],
+      "failure_reasons": [],
+      "review_reasons": [
+        "대학 주소록 미등록",
+        "기사에 여러 대학 등장"
+      ],
+      "classified": true,
+      "result": [
+        "경북",
+        "서울"
+      ],
+      "ambiguous_names": [],
+      "additional_confirmation_names": [
+        "최강대학"
+      ],
+      "background_universities": [],
+      "conflicting_region_evidence": []
+    },
     {
       "id": "236937daab02d07ebfcd5afb",
       "title": "울산 3개 대학 학생들 스포츠로 뭉쳤다",
@@ -1391,6 +1495,26 @@
       "id": "b593d9250e32f87181b76bea",
       "title": "앞치마에 금속탐지기까지, AI 부정행위가 바꾼 대학 논술시험장…대학들, 대책 마련 총력",
       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPck1pbFVTMXA3YWNUQmQ2RUxPeWdJSEZ0aVZLSkNGekJqOWp0SGJpMXBjTjFVVUJ4ejRWMW9HSXVMNFMzT1pzYnJ1ZDFDTVNCai1aRGh4eVhXbFdISmJTMDVLQThhSUkyYmttY1JIM2JKVVlidlA2MFVTSFlnNW1JY1dpQnJLSHBhNVNOQnpPczFhQnBmWU95UkVVTWt0VEp1dUhFeWdaZ0p5Z9IBX0FVX3lxTE9JZ0FJZk1kcmpDZEN4SEY5bUJYWUgzWFdraDlDWHIwUVJ6ckRYZ1YzWjlKMm5Ncjd6Uy1VNGtlb1JQdWdyMlliZ3B6TjgzVnhtbkphaXFLUlR0dGh5R1dR?oc=5",
+      "extracted_universities": [],
+      "directory_matches": [],
+      "campus_checks": [],
+      "failure_reasons": [
+        "대학명 인식 실패"
+      ],
+      "review_reasons": [
+        "대학명 인식 실패"
+      ],
+      "classified": false,
+      "result": [],
+      "ambiguous_names": [],
+      "additional_confirmation_names": [],
+      "background_universities": [],
+      "conflicting_region_evidence": []
+    },
+    {
+      "id": "b7879f657027f19191d15b31",
+      "title": "앞치마에 금속탐지기까지, AI 부정행위가 바꾼 대학 논술시험장…대학들, 대책 마련 총력",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9VSF84b0xPRVhmN0NZQ2cyOXYyQUNWdHEzbWVDTnBfamhlcDVMVzZ4Q25wU0dmbC00Wkd6ZWcwMHF3ZEFTTExjYlJ2dnlfY3gwb21sVjhwcHRZd9IBX0FVX3lxTE9JZ0FJZk1kcmpDZEN4SEY5bUJYWUgzWFdraDlDWHIwUVJ6ckRYZ1YzWjlKMm5Ncjd6Uy1VNGtlb1JQdWdyMlliZ3B6TjgzVnhtbkphaXFLUlR0dGh5R1dR?oc=5",
       "extracted_universities": [],
       "directory_matches": [],
       "campus_checks": [],
@@ -10444,6 +10568,26 @@
       "id": "ecca1f07ab90d5697ed6846c",
       "title": "“앞치마 입고 논술 봤어요“…’AI커닝 논란’에 대학도 비상",
       "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1VS2VRUnNOVVVvejN4cUpVMGtveFFrWmRtUU92RktkUnQ4VkI3VEZLX2hIZnFTN3R6bXdZQzNjMUV5RDRaNHgyUm9lQTBaOXpobUhzT0x4Z1oyVENqUEpNU2VWRXJtb3c?oc=5",
+      "extracted_universities": [],
+      "directory_matches": [],
+      "campus_checks": [],
+      "failure_reasons": [
+        "대학명 인식 실패"
+      ],
+      "review_reasons": [
+        "대학명 인식 실패"
+      ],
+      "classified": false,
+      "result": [],
+      "ambiguous_names": [],
+      "additional_confirmation_names": [],
+      "background_universities": [],
+      "conflicting_region_evidence": []
+    },
+    {
+      "id": "478404722a0b9a8d019ef929",
+      "title": "\"앞치마 입고 논술 봤어요\"…대학도 AI 커닝 비상",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9URW42SjNoNXNleDRsdmQ0VVhPaDV5VGwtYkxPMk9HUGloeXM5bjlNMkstS2RMUkNlQWpYUkZSSGxTY3VmT0V4ZGw5Q0JwdE01U0VKY0RoTGtDbjVrUUllcdIBYEFVX3lxTE9URW42SjNoNXNleDRsdmQ0VVhPaDV5VGwtYkxPMk9HUGloeXM5bjlNMkstS2RMUkNlQWpYUkZSSGxTY3VmT0V4ZGw5Q0JwdE01U0VKY0RoTGtDbjVrUUllcQ?oc=5",
       "extracted_universities": [],
       "directory_matches": [],
       "campus_checks": [],
@@ -53795,6 +53939,26 @@
       "id": "3f4b7246fe97fde35028cf62",
       "title": "주말 대학 논술시험도 'AI 방지' 지침 잇달아…수험생들 혼란",
       "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE53X1F1RDZtNWZQSGRMa3BjbzFUTTFWT1pTMW1EM0pBSDQ0enRKZjNVZHcweEtOaFF6YlZuNXdhN2J3VFpGZGtHTmZRQnlfc29iTnl4SzBjWXBvNnlOaEFKM0V1LXBNM0JKQTR3WGlkUQ?oc=5",
+      "extracted_universities": [],
+      "directory_matches": [],
+      "campus_checks": [],
+      "failure_reasons": [
+        "대학명 인식 실패"
+      ],
+      "review_reasons": [
+        "대학명 인식 실패"
+      ],
+      "classified": false,
+      "result": [],
+      "ambiguous_names": [],
+      "additional_confirmation_names": [],
+      "background_universities": [],
+      "conflicting_region_evidence": []
+    },
+    {
+      "id": "569bfadeec4513caaae29f99",
+      "title": "주말 대학 논술시험도 'AI 방지' 지침 잇달아…수험생들 혼란",
+      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5pdndrYk1jd3BFMG91UDZOYmZxV3dFdElPWW0zTDlQM2ZNNG5OY2NOWUlBYXp3VzI3cjFhRnhJUjBZOGNteFZIbXo3b2VsVjJzcy1wWEZzUTYzT0Mzc0E?oc=5",
       "extracted_universities": [],
       "directory_matches": [],
       "campus_checks": [],
@@ -179890,233 +180054,6 @@
       "result": [
         "경북",
         "해외"
-      ],
-      "ambiguous_names": [],
-      "additional_confirmation_names": [],
-      "background_universities": [],
-      "conflicting_region_evidence": []
-    },
-    {
-      "id": "7fd5f9721b5690e341928ec3",
-      "title": "[교육소식]대전대 '자기주도적 전공선택 지원' 프로그램 운영 등",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9sZ1g4d1VIZi03SEdDYmxxRkNBTTdNTktSSmpiT2x5bk03YVA0WXkxNmRjYlV5YTA0Y1pPLWZ6aDJXV0xmZ2tHN2xFN1pPWnB4OTdKeW0tVDQ3NGlWd1ZTUdIBeEFVX3lxTE9TRkhjbVQ1T0QwRGtFcC0wR3dJdGlVa0xUcFo3T2ZqUmkwNFFwTnZCY05lVmdnU1BJNUw4YkY5UFgzR1I3ZGlFMV9tWElvOW5JcjVsTExBZHkzS3lJUGpSZHBjVURkNzZjeDBQVGR0eWJ4YnYwR1RSeQ?oc=5",
-      "extracted_universities": [
-        "대전대학교"
-      ],
-      "directory_matches": [
-        {
-          "name": "대전대학교",
-          "matched": true,
-          "candidate_regions": [
-            "대전"
-          ],
-          "region_resolution": "unique_verified_location"
-        }
-      ],
-      "campus_checks": [
-        {
-          "name": "대전대학교",
-          "campuses": [],
-          "status": "not_specified",
-          "confirmed": false
-        }
-      ],
-      "failure_reasons": [],
-      "review_reasons": [],
-      "classified": true,
-      "result": [
-        "대전"
-      ],
-      "ambiguous_names": [],
-      "additional_confirmation_names": [],
-      "background_universities": [],
-      "conflicting_region_evidence": []
-    },
-    {
-      "id": "b0b174903454dc4d882ccba0",
-      "title": "동양대 경북앵커사업단/간호대학 임상역량 강화 캠프 운영",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBWR182eDhUa2dxREt1aUpQZTFIckpTRzcycUt3RlVGOWJNa1lpSDk5SUNuSUVZbmh2X1ROQ0FuVjlLVmNvZFlXdlpiU2lGeTlIbXVRckxTV1VCNFBKOU41bHVpM1ZNeWxxVWdkaA?oc=5",
-      "extracted_universities": [
-        "간호대학",
-        "동양대학교"
-      ],
-      "directory_matches": [
-        {
-          "name": "동양대학교",
-          "matched": true,
-          "candidate_regions": [
-            "경북"
-          ],
-          "region_resolution": "unique_verified_location"
-        },
-        {
-          "name": "간호대학",
-          "matched": false,
-          "candidate_regions": [],
-          "region_resolution": "directory_missing"
-        }
-      ],
-      "campus_checks": [
-        {
-          "name": "동양대학교",
-          "campuses": [],
-          "status": "not_specified",
-          "confirmed": false
-        }
-      ],
-      "failure_reasons": [],
-      "review_reasons": [
-        "대학 주소록 미등록"
-      ],
-      "classified": true,
-      "result": [
-        "경북"
-      ],
-      "ambiguous_names": [],
-      "additional_confirmation_names": [
-        "간호대학"
-      ],
-      "background_universities": [],
-      "conflicting_region_evidence": []
-    },
-    {
-      "id": "28d1aa27e8d912fccf261872",
-      "title": "경북과학대 간호학과 대학생 건강실천 서포터즈 1/2위 싹쓸이",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9RdTZuMWQ4bHo4OTFieHkyR2lTR21sVy1qSkhkLTBwZThsMXB1dFZMOWhBeXdtLWIxUlllallacmVfRk1vYkhHZ1d4NmpTQ2NEQlFRcVZUYTZHREFELTd4VVNzY3pEUTZZcXV3Tg?oc=5",
-      "extracted_universities": [
-        "경북과학대학교"
-      ],
-      "directory_matches": [
-        {
-          "name": "경북과학대학교",
-          "matched": true,
-          "candidate_regions": [
-            "경북"
-          ],
-          "region_resolution": "unique_verified_location"
-        }
-      ],
-      "campus_checks": [
-        {
-          "name": "경북과학대학교",
-          "campuses": [],
-          "status": "not_specified",
-          "confirmed": false
-        }
-      ],
-      "failure_reasons": [],
-      "review_reasons": [],
-      "classified": true,
-      "result": [
-        "경북"
-      ],
-      "ambiguous_names": [],
-      "additional_confirmation_names": [],
-      "background_universities": [],
-      "conflicting_region_evidence": []
-    },
-    {
-      "id": "bac2dc4e41e3641833b5f219",
-      "title": "국립공주대 제20회 캠퍼스 사진공모전 시상식 개최",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9wTlk4SEY1dmozaExtNlFkeVh4Y2NiRGlMd3R1U1J0XzNaVGZBSGFkV3QxNnZVMVZ3LW41dGlpN1o0aF9sX2tLOU5hRG40XzFMSE1NQzY0OUZXT1lLemJ0OVdhQ2MtbGJNQnhvQg?oc=5",
-      "extracted_universities": [
-        "국립공주대학교"
-      ],
-      "directory_matches": [
-        {
-          "name": "국립공주대학교",
-          "matched": true,
-          "candidate_regions": [
-            "충남"
-          ],
-          "region_resolution": "unique_verified_location"
-        }
-      ],
-      "campus_checks": [
-        {
-          "name": "국립공주대학교",
-          "campuses": [],
-          "status": "not_specified",
-          "confirmed": false
-        }
-      ],
-      "failure_reasons": [],
-      "review_reasons": [],
-      "classified": true,
-      "result": [
-        "충남"
-      ],
-      "ambiguous_names": [],
-      "additional_confirmation_names": [],
-      "background_universities": [],
-      "conflicting_region_evidence": []
-    },
-    {
-      "id": "ab4b1683fe4d18ef2ee372af",
-      "title": "국립부경대 '2026 수산업전문가과정 수료식' 개최",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE4tSElDd3hDVGxkUllLQXQ1bTJ4LWk5ckpQeU9XWUc4dXR1dWloRVVIZEFQQktsbjB4NXpIUlotRHJWUGtOZXdNY1h6WkFYQVpteHh3b0ZFMzhabHJWdUlscGt2VGhoMTZPYU9vZg?oc=5",
-      "extracted_universities": [
-        "부경대학교"
-      ],
-      "directory_matches": [
-        {
-          "name": "부경대학교",
-          "matched": true,
-          "candidate_regions": [
-            "부산"
-          ],
-          "region_resolution": "unique_verified_location"
-        }
-      ],
-      "campus_checks": [
-        {
-          "name": "부경대학교",
-          "campuses": [],
-          "status": "not_specified",
-          "confirmed": false
-        }
-      ],
-      "failure_reasons": [],
-      "review_reasons": [],
-      "classified": true,
-      "result": [
-        "부산"
-      ],
-      "ambiguous_names": [],
-      "additional_confirmation_names": [],
-      "background_universities": [],
-      "conflicting_region_evidence": []
-    },
-    {
-      "id": "08e133f58a0e157e5d8f040e",
-      "title": "한국열린사이버대학교 상담심리학과, ‘2026학년도 특임교수 발전발대식’ 성황리 개최",
-      "url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFA4NndEaDJnLXl6UFZvTU9fWloxMDN2VnlEZ2lBNFBSRng1NzBHWnZrckxZOWlLdEpJTEgwWkdsbGVFT0pSREtrTktB?oc=5",
-      "extracted_universities": [
-        "한국열린사이버대학교"
-      ],
-      "directory_matches": [
-        {
-          "name": "한국열린사이버대학교",
-          "matched": true,
-          "candidate_regions": [
-            "서울"
-          ],
-          "region_resolution": "unique_verified_location"
-        }
-      ],
-      "campus_checks": [
-        {
-          "name": "한국열린사이버대학교",
-          "campuses": [],
-          "status": "not_specified",
-          "confirmed": false
-        }
-      ],
-      "failure_reasons": [],
-      "review_reasons": [],
-      "classified": true,
-      "result": [
-        "서울"
       ],
       "ambiguous_names": [],
       "additional_confirmation_names": [],
