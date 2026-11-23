@@ -5,7 +5,7 @@
   "feed": "https://www.ntis.go.kr/rndgate/unRndRss.xml?prt=100"
  },
  "status": "ok",
- "updated_at": "2026-11-23T11:03:39+00:00",
+ "updated_at": "2026-11-23T22:50:42+00:00",
  "categories": {
   "status": [
    "접수예정",
@@ -77,6 +77,84 @@
  },
  "items": [
   {
+   "id": "ntis-1283767",
+   "title": "「K-문샷 AI 과학자 미션 분야 특화 확산을 위한 협력사업 기획 연구」 정책연구과제 공고",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283767",
+   "ministry": "과학기술정보통신부",
+   "agency": "국가과학기술연구회",
+   "posted_date": "2026-11-23",
+   "open_date": "2026-11-23",
+   "close_date": "2026-12-03",
+   "budget_won": 80000000,
+   "first_seen": "2026-11-24",
+   "status": "접수중"
+  },
+  {
+   "id": "ntis-1283614",
+   "title": "「K-문샷 반도체 미션 성과제고를 위한 연구모델 기획 연구」 정책연구과제 재공고",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283614",
+   "ministry": "과학기술정보통신부",
+   "agency": "국가과학기술연구회",
+   "posted_date": "2026-11-20",
+   "open_date": "2026-11-20",
+   "close_date": "2026-11-25",
+   "budget_won": 80000000,
+   "first_seen": "2026-11-24",
+   "status": "접수중"
+  },
+  {
+   "id": "ntis-1283612",
+   "title": "2027년도 국립보건연구원 신규 연구용역과제(학술) 입찰 통합공고",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283612",
+   "ministry": "보건복지부",
+   "agency": "한국보건산업진흥원",
+   "posted_date": "2026-11-20",
+   "open_date": "2026-11-20",
+   "close_date": "2026-12-01",
+   "budget_won": 100000000,
+   "first_seen": "2026-11-24",
+   "status": "접수중"
+  },
+  {
+   "id": "ntis-1283510",
+   "title": "2027년 농림축산검역검사기술개발사업 신규 산업체공동연구과제 참여기관 공모 재공고",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283510",
+   "ministry": "농림축산식품부",
+   "agency": "농림축산검역본부",
+   "posted_date": "2026-11-19",
+   "open_date": "2026-11-19",
+   "close_date": "2026-11-27",
+   "budget_won": 510000000,
+   "first_seen": "2026-11-24",
+   "status": "접수중"
+  },
+  {
+   "id": "ntis-1283512",
+   "title": "2026년도 제5차 과학기술분야 연구기획과제 공모",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283512",
+   "ministry": "과학기술정보통신부",
+   "agency": "한국연구재단",
+   "posted_date": "2026-11-13",
+   "open_date": "2026-11-13",
+   "close_date": "2026-11-26",
+   "budget_won": 50000000,
+   "first_seen": "2026-11-24",
+   "status": "접수중"
+  },
+  {
+   "id": "ntis-1283097",
+   "title": "(기정원 연계) 2027년도 제조AX분야 산업기술R&D사업 과제기획을 위한 기술수요조사",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283097",
+   "ministry": "산업통상부",
+   "agency": "한국산업기술기획평가원",
+   "posted_date": "2026-11-13",
+   "open_date": "2026-11-16",
+   "close_date": "2026-11-27",
+   "budget_won": 0,
+   "first_seen": "2026-11-24",
+   "status": "접수중"
+  },
+  {
    "id": "ntis-1283030",
    "title": "「K-문샷 BCI미션 신규사업 기획을 위한 영장류 기능 뇌지도 구축 기획 연구」 정책연구과제 공고",
    "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1283030",
@@ -87,7 +165,7 @@
    "close_date": "2026-11-23",
    "budget_won": 99000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282959",
@@ -100,7 +178,7 @@
    "close_date": "2026-11-23",
    "budget_won": 120000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282958",
@@ -113,7 +191,7 @@
    "close_date": "2026-11-23",
    "budget_won": 100000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282957",
@@ -126,7 +204,7 @@
    "close_date": "2026-11-23",
    "budget_won": 100000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282955",
@@ -139,7 +217,7 @@
    "close_date": "2026-11-23",
    "budget_won": 280000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282912",
@@ -152,7 +230,7 @@
    "close_date": "2026-11-23",
    "budget_won": 80000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282916",
@@ -165,7 +243,7 @@
    "close_date": "2026-11-23",
    "budget_won": 60000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282915",
@@ -178,7 +256,20 @@
    "close_date": "2026-11-23",
    "budget_won": 100000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
+  },
+  {
+   "id": "ntis-1282913",
+   "title": "2026년 에너지국제공동연구사업 한-미 에너지협력센터 구축확산",
+   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1282913",
+   "ministry": "기후에너지환경부",
+   "agency": "한국에너지기술평가원",
+   "posted_date": "2026-11-10",
+   "open_date": "2026-11-10",
+   "close_date": "2026-11-17",
+   "budget_won": 22944000000,
+   "first_seen": "2026-11-24",
+   "status": "마감"
   },
   {
    "id": "ntis-1282732",
@@ -221,16 +312,16 @@
   },
   {
    "id": "ntis-1282515",
-   "title": "2027년도 소재부품기술개발사업 소부장 특화단지 R&D 기술수요조사 공고",
+   "title": "2027년도 소재부품기술개발사업 소부장 특화단지 R&D 기술수요조사 공고(연장)",
    "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1282515",
    "ministry": "산업통상부",
    "agency": "한국산업기술기획평가원",
    "posted_date": "2026-11-09",
    "open_date": "2026-11-09",
-   "close_date": "2026-11-20",
+   "close_date": "2026-12-04",
    "budget_won": 0,
    "first_seen": "2026-11-17",
-   "status": "마감"
+   "status": "접수중"
   },
   {
    "id": "ntis-1282393",
@@ -617,7 +708,7 @@
    "agency": "정보통신산업진흥원",
    "posted_date": "2026-10-21",
    "open_date": "2026-10-21",
-   "close_date": "2026-11-17",
+   "close_date": "2026-11-18",
    "budget_won": 0,
    "first_seen": "2026-11-17",
    "status": "마감"
@@ -946,71 +1037,6 @@
    "budget_won": 0,
    "first_seen": "2026-11-17",
    "status": "마감"
-  },
-  {
-   "id": "ntis-1278998",
-   "title": "2026년도 투·융자 연계 기술개발사업 지원계획 수정 공고(딥테크 챌린지 프로젝트_기술도전형)_(2026-DCP-54_로보틱스_딥테크 챌린지 프로젝트(DCP))",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1278998",
-   "ministry": "중소벤처기업부",
-   "agency": "중소기업기술정보진흥원",
-   "posted_date": "2026-07-10",
-   "open_date": "2026-09-23",
-   "close_date": "2026-11-23",
-   "budget_won": 5000000000,
-   "first_seen": "2026-11-17",
-   "status": "접수중"
-  },
-  {
-   "id": "ntis-1278997",
-   "title": "2026년도 투·융자 연계 기술개발사업 지원계획 수정 공고(딥테크 챌린지 프로젝트_기술도전형)_(2026-DCP-40_생명/신약_딥테크 챌린지 프로젝트(DCP))",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1278997",
-   "ministry": "중소벤처기업부",
-   "agency": "중소기업기술정보진흥원",
-   "posted_date": "2026-07-10",
-   "open_date": "2026-09-23",
-   "close_date": "2026-11-23",
-   "budget_won": 5000000000,
-   "first_seen": "2026-11-17",
-   "status": "접수중"
-  },
-  {
-   "id": "ntis-1278996",
-   "title": "2026년도 투·융자 연계 기술개발사업 지원계획 수정 공고(딥테크 챌린지 프로젝트_기술도전형)_(2026)(2026-DCP-39_생명/신약_딥테크 챌린지 프로젝트(DCP))",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1278996",
-   "ministry": "중소벤처기업부",
-   "agency": "중소기업기술정보진흥원",
-   "posted_date": "2026-07-10",
-   "open_date": "2026-09-23",
-   "close_date": "2026-11-23",
-   "budget_won": 5000000000,
-   "first_seen": "2026-11-17",
-   "status": "접수중"
-  },
-  {
-   "id": "ntis-1278995",
-   "title": "2026년도 투·융자 연계 기술개발사업 지원계획 수정 공고(딥테크 챌린지 프로젝트_기술도전형)_(2026-DCP-38_헬스케어_딥테크 챌린지 프로젝트(DCP))",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1278995",
-   "ministry": "중소벤처기업부",
-   "agency": "중소기업기술정보진흥원",
-   "posted_date": "2026-07-10",
-   "open_date": "2026-09-23",
-   "close_date": "2026-11-23",
-   "budget_won": 5000000000,
-   "first_seen": "2026-11-17",
-   "status": "접수중"
-  },
-  {
-   "id": "ntis-1278994",
-   "title": "2026년도 투·융자 연계 기술개발사업 지원계획 수정 공고(딥테크 챌린지 프로젝트_기술도전형)_(2026-DCP-37_헬스케어_딥테크 챌린지 프로젝트(DCP))",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1278994",
-   "ministry": "중소벤처기업부",
-   "agency": "중소기업기술정보진흥원",
-   "posted_date": "2026-07-10",
-   "open_date": "2026-09-23",
-   "close_date": "2026-11-23",
-   "budget_won": 5000000000,
-   "first_seen": "2026-11-17",
-   "status": "접수중"
   },
   {
    "id": "ntis-1253341",
