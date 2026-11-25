@@ -5,7 +5,7 @@
   "feed": "https://www.ntis.go.kr/rndgate/unRndRss.xml?prt=100"
  },
  "status": "ok",
- "updated_at": "2026-11-25T12:31:55+00:00",
+ "updated_at": "2026-11-25T22:11:14+00:00",
  "categories": {
   "status": [
    "접수예정",
@@ -100,7 +100,7 @@
    "close_date": "2026-11-25",
    "budget_won": 80000000,
    "first_seen": "2026-11-24",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1283612",
@@ -334,7 +334,7 @@
    "close_date": "2026-11-25",
    "budget_won": 1,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282329",
@@ -645,19 +645,6 @@
    "open_date": "2026-10-26",
    "close_date": "2026-11-13",
    "budget_won": 0,
-   "first_seen": "2026-11-17",
-   "status": "마감"
-  },
-  {
-   "id": "ntis-1281297",
-   "title": "2026년도 소재부품기술개발사업(4차) 신규지원 대상과제 공고(연장)",
-   "url": "https://www.ntis.go.kr/rndgate/eg/un/ra/view.do?roRndUid=1281297",
-   "ministry": "산업통상부",
-   "agency": "한국산업기술기획평가원",
-   "posted_date": "2026-10-26",
-   "open_date": "2026-10-26",
-   "close_date": "2026-10-26",
-   "budget_won": 8580000000,
    "first_seen": "2026-11-17",
    "status": "마감"
   },
