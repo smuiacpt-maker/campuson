@@ -5,7 +5,7 @@
   "feed": "https://www.ntis.go.kr/rndgate/unRndRss.xml?prt=100"
  },
  "status": "ok",
- "updated_at": "2026-11-26T04:16:48+00:00",
+ "updated_at": "2026-11-27T05:15:03+00:00",
  "categories": {
   "status": [
    "접수예정",
@@ -152,7 +152,7 @@
    "close_date": "2026-11-26",
    "budget_won": 50000000,
    "first_seen": "2026-11-24",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1283097",
@@ -568,7 +568,7 @@
    "close_date": "2026-11-26",
    "budget_won": 0,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1282036",
@@ -750,7 +750,7 @@
    "close_date": "2026-11-26",
    "budget_won": 580000000,
    "first_seen": "2026-11-17",
-   "status": "접수중"
+   "status": "마감"
   },
   {
    "id": "ntis-1281433",
